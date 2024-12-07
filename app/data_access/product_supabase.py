@@ -57,7 +57,10 @@ def dataUpdateProduct(product: Product) :
         .execute()
     )
     # result is 1st item in the list
-    return response.data[0]
+    if (response.data):
+        return dataGetProduct(response.data[0]['id'])
+    return False
+    
 
 # add product, accepts product object
 def dataAddProduct(product: Product) :
