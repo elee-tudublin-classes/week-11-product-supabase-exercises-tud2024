@@ -53,10 +53,11 @@ def dataUpdateProduct(product: Product) :
     #response = supabase.table("product").upsert({"id": product.id, "category_id": product.category_id, "title": product.title, "thumbnail": product.thumbnail, "stock": product.stock, "price": product.price}).execute()
     response = (
         supabase.table("product")
-        .upsert(product.model_dump()) # convert product object to dict - required by Supabase
+        .upsert(product.model_dump(),on_conflict="id") # convert product object to dict - required by Supabase
         .execute()
     )
     # result is 1st item in the list
+    #print(product.model_dump())
     if (response.data):
         return dataGetProduct(response.data[0]['id'])
     return False

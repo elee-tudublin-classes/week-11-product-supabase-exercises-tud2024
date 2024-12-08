@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from app.services.product_service import *
 from app.services.category_service import getAllCategories
 
-from app.models.product import Product
+from app.models.product import *
 
 router = APIRouter()
 
@@ -27,9 +27,10 @@ async def getProducts(request: Request):
 
 @router.get("/update/{id}", response_class=HTMLResponse)
 async def getProfuctUpdateForm(request: Request, id: int):
+    categories = getAllCategories() # fetching all category data for product_update_form.html . This is used for category dropdown menu.
 
     # note passing of parameters to the page
-    return templates.TemplateResponse("product/partials/product_update_form.html", {"request": request, "product": getProduct(id) })
+    return templates.TemplateResponse("product/partials/product_update_form.html", {"request": request, "product": getProduct(id),"categories":categories })
 
 # https://fastapi.tiangolo.com/tutorial/request-form-models/#pydantic-models-for-forms
 @router.put("/")
@@ -39,7 +40,7 @@ def putProduct(request: Request, productData: Annotated[Product, Form()]) :
     return templates.TemplateResponse("product/partials/product_tr.html", {"request": request, "product": update_product})
 
 @router.post("/")
-def postProduct(request: Request, productData: Annotated[Product, Form()]) :
+def postProduct(request: Request, productData: Annotated[new_Product, Form()]) :
     # get item value from the form POST data
     new_product = newProduct(productData)
     return templates.TemplateResponse("product/partials/product_tr.html", {"request": request, "product": new_product})
@@ -52,6 +53,6 @@ def delProduct(request: Request, id: int):
     return templates.TemplateResponse("product/partials/product_list.html", {"request": request, "products": getAllProducts()})
 
 @router.get("/bycat{id}")
-def delProduct(request: Request, id: int):
+def GetProductCat(request: Request, id: int):
     products=getProductByCat(id)
     return templates.TemplateResponse("product/partials/product_list.html", {"request": request, "products":products})
