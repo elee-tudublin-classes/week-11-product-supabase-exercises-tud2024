@@ -54,3 +54,4 @@ def putTodo(request: Request, id: Annotated[int, Form()], details: Annotated[str
 def delToto(request: Request, id: int):
     deleteTodo(id)
     return templates.TemplateResponse("todo/partials/todo_list.html", {"request": request, "todoList": getAllTodos(), "filter": "all" })
+
